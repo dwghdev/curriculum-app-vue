@@ -1,27 +1,33 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import DisplayCurriculum from './views/DisplayCurriculum.vue'
-import UpsertCurriculum from './views/UpsertCurriculum.vue'
+import Home from "./views/Home.vue"
+import DisplayCurricula from "./views/DisplayCurricula.vue"
+import DisplayCurriculum from "./views/DisplayCurriculum.vue"
+import CreateCurriculum from "./views/CreateCurriculum.vue"
 
 Vue.use(Router)
 
 const router = new Router({
   routes: [
     {
-      path: '/',
-      name: 'Home',
+      path: "/",
+      name: "Home",
       component: Home
     },
     {
-      path: '/curriculum',
-      name: 'curriculum',
+      path: "/curricula",
+      name: "curricula",
+      component: DisplayCurricula
+    },
+    {
+      path: "/curricula/:id",
+      name: "curriculum",
       component: DisplayCurriculum
     },
     {
-      path: '/curriculum/upsert',
-      name: 'upsert',
-      component: UpsertCurriculum
+      path: "/curricula/create",
+      name: "create",
+      component: CreateCurriculum
     }
   ]
 })
