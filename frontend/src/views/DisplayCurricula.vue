@@ -3,17 +3,17 @@
     <v-col md="6" offset-md="3" sm="8" >
       <div class="page-header">
         <h1>All Curricula</h1>
-        <v-btn>Create New</v-btn>
+        <v-btn @click="$router.push('/curricula/create')">Create New</v-btn>
       </div>
       <div class="curricula-list">
         <v-card 
           outlined
           class="curriculum-card"
-          v-for="curriculum in curriculaData"
-          :key="curriculum.id"
+          v-for="curriculum in curricula"
+          :key="curriculum._id"
         >
           <v-card-title class="headline">
-            <router-link :to="`/curricula/${curriculum.id}`">{{ curriculum.name }}</router-link>
+            <router-link :to="`/curricula/${curriculum._id}`">{{ curriculum.name }}</router-link>
           </v-card-title>
           <v-card-subtitle>
             {{ curriculum.description }}
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
+import { mapState, mapActions } from "vuex"
 
 export default {
   name: "DisplayCurricula",
@@ -33,7 +33,13 @@ export default {
     return { }
   },
   computed: {
-    ...mapState(["curriculaData"])
+    ...mapState(["curricula"])
+  },
+  methods: {
+    ...mapActions(["getCurricula"])
+  },
+  mounted() {
+    this.getCurricula()
   }
 }
 </script>

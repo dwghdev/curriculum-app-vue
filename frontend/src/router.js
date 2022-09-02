@@ -20,15 +20,15 @@ const router = new Router({
       component: DisplayCurricula
     },
     {
+      path: "/curricula/create",
+      name: "create",
+      component: CreateCurriculum
+    },
+    {
       path: "/curricula/:id",
       name: "curriculum",
       component: DisplayCurriculum
     },
-    {
-      path: "/curricula/create",
-      name: "create",
-      component: CreateCurriculum
-    }
   ]
 })
 

@@ -8,7 +8,7 @@
     >
       <div class="page-header">
         <h1>Create Curriculum</h1>
-        <v-btn>Save</v-btn>
+        <v-btn @click="saveCurriculum">Save</v-btn>
       </div>
 
       <v-form class="create-form">
@@ -17,7 +17,7 @@
             <v-subheader>Name</v-subheader>
           </v-col>
           <v-col cols="9">
-            <v-text-field />
+            <v-text-field v-model="name" />
           </v-col>
         </v-row>
         <v-row>
@@ -25,7 +25,7 @@
             <v-subheader>Goal</v-subheader>
           </v-col>
           <v-col cols="9">
-            <v-text-field />
+            <v-text-field v-model="goal" />
           </v-col>
         </v-row>
         <v-row>
@@ -34,6 +34,7 @@
             <v-textarea
               solo
               name="description"
+              v-model="description"
             />
           </v-col>
         </v-row>
@@ -42,16 +43,21 @@
             <div class="curricula-list">
               <v-card
                 outlined
+                v-for="(section, k) in sections"
+                :key="section.name + k"
               >
-                <v-card-title class="headline">Sections #1</v-card-title>
-                
+                <v-card-title class="headline">
+                  Sections #{{k+1}}
+                </v-card-title>
                 <v-card-text>
                   <v-row no-gutters>
                     <v-col cols="3">
                       <v-subheader>Name</v-subheader>
                     </v-col>
                     <v-col cols="9">
-                      <v-text-field />
+                      <v-text-field 
+                        v-model="section.name"
+                      />
                     </v-col>
                   </v-row>
                   <v-row>
@@ -59,7 +65,9 @@
                       <v-subheader>Goal</v-subheader>
                     </v-col>
                     <v-col cols="9">
-                      <v-text-field />
+                      <v-text-field 
+                        v-model="section.goal"
+                      />
                     </v-col>
                   </v-row>
                   <v-card class="resources-card">
@@ -68,14 +76,19 @@
                         <v-col cols="12">
                           <v-text-field
                             placeholder="Enter Resource Link"
+                            v-model="section.newResource"
+                            @keyup.enter="addItem('resource', k)"
                           />
                         </v-col>
                       </v-row>
                       <v-row no-gutters>
                         <v-col cols="12">
-                          <p>List of resources</p>
-                          <p>List of resources</p>
-                          <p>List of resources</p>
+                          <p 
+                            v-for="(resource, m) in section.resources" 
+                            :key="resource + m"
+                          >
+                            {{ resource }}
+                          </p>
                         </v-col>
                       </v-row>
                     </v-card-text>
@@ -91,9 +104,12 @@
                       </v-row>
                       <v-row no-gutters>
                         <v-col cols="12">
-                          <p>List of projects</p>
-                          <p>List of projects</p>
-                          <p>List of projects</p>
+                          <p 
+                            v-for="(project, m) in section.projects" 
+                            :key="project+ m"
+                          >
+                            {{ project }}
+                          </p>
                         </v-col>
                       </v-row>
                     </v-card-text>
@@ -105,10 +121,63 @@
         </v-row>
         <v-row>
           <v-col cols="12">
-            <v-btn>Add Section</v-btn>
+            <v-btn @click="addSection">
+              Add Section
+            </v-btn>
           </v-col>
         </v-row>
       </v-form>
     </v-col>
   </v-row>
 </template>
+
+<script>
+import { mapActions } from "vuex"
+
+export default {
+  name: "CreateCurriculum",
+  data() {
+    return {
+      name: "",
+      goal: "",
+      description: "",
+      sections: [{
+        name: "",
+        goal: "",
+        newResource: "",
+        resources: [],
+        newProject: "",
+        projects: []
+      }]
+    }
+  },
+  methods: {
+    ...mapActions(["postCurriculum"]),
+    saveCurriculum() {
+      const { name, goal, description } = this
+
+      const newSections = sections.filter((section, i) => {
+        delete section.newResource
+        delete section.newProject
+        return section
+      })
+
+      const curriculum = { name, goal, description }
+      this.postCurriculum(curriculum)
+    },
+    addSection() {
+      this.sections.push({
+        name: "",
+        goal: "",
+        resources: [],
+        projects: [],
+      })
+    },
+    addItem(type, i) {
+      let item = this.sections[i][`new${type[0].toUpperCase()}${type.slice(1)}`]
+      this.sections[i][`${type}s`].push(item)
+      this.sections[i][item] = ""
+    }
+  }
+}
+</script>

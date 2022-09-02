@@ -1,11 +1,11 @@
 <template>
   <v-app>
     <TopNav />
-    <v-content>
+    <v-main>
       <v-container>
         <router-view :key="$route.fullPath"/>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
